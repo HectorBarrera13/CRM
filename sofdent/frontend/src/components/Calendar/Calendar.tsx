@@ -1,5 +1,5 @@
 import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid";
+import timeGridPlugin from "@fullcalendar/timegrid/index.js";
 import type { RefObject } from "react";
 
 function Calendar({

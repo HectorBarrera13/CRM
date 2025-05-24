@@ -4,7 +4,8 @@ import { useCalendarActions } from "./components/Calendar/useCalendarActions";
 import { useState } from "react";
 import ModalAppointmentForm from "./components/Modal/ModalAppointmentForm";
 import type { Appointment } from "./models/EventAppointment";
-import Card from "./components/Card";
+import Card from "./components/Card/Card";
+import { PatientsList } from "./components/test";
 
 function App() {
   const { calendarRef, addAppointment } = useCalendarActions();
@@ -33,7 +34,6 @@ function App() {
       <Button onClick={() => handleGuardar(appointment)} isLoading={false}>
         meter evento
       </Button>
-      //modal para añadir citas
       <ModalAppointmentForm
         show={showModal}
         onClose={() => setShowModal(false)}
