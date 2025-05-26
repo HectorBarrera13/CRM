@@ -5,7 +5,6 @@ import { useState } from "react";
 import ModalAppointmentForm from "./components/Modal/ModalAppointmentForm";
 import type { Appointment } from "./models/EventAppointment";
 import Card from "./components/Card/Card";
-import { PatientsList } from "./components/test";
 
 function App() {
   const { calendarRef, addAppointment } = useCalendarActions();
@@ -39,14 +38,10 @@ function App() {
         onClose={() => setShowModal(false)}
         onGuardar={handleGuardar}
       />
-      <div className="container mt-4">
-        <Card className="mx-auto" style={{ height: 600, maxWidth: "1000px" }}>
-          <h2 className="h5 mb-3">Calendario</h2>
-          <div style={{ flex: 1, height: "100%", overflow: "hidden" }}>
-            <Calendar calendarRef={calendarRef} />
-          </div>
-        </Card>
-      </div>
+      <Card className="mx-auto" size="grande">
+        <h2 className="h5 mb-3">Calendario</h2>
+        <Calendar calendarRef={calendarRef} />
+      </Card>
     </main>
   );
 }

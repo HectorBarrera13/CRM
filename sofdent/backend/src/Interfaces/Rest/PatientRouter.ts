@@ -8,7 +8,6 @@ import {
   deletePatient,
   findInactivePatientsSince,
   findPatientsWithUpcomingAppointments,
-  findUpcomingAppointmentsByPatientId,
   findPatientsByName,
 } from "../../Infrastructure/Controllers/PatientController";
 
@@ -22,5 +21,4 @@ patientRouter.delete("/:id", deletePatient);
 
 patientRouter.get("/inactive/:date", findInactivePatientsSince);
 patientRouter.get("/with-upcoming", findPatientsWithUpcomingAppointments);
-patientRouter.get("/:id/upcoming", findUpcomingAppointmentsByPatientId);
 patientRouter.get("/name/:name", findPatientsByName);

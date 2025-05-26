@@ -34,12 +34,6 @@ export class PatientService {
     return this.repository.findWithUpcomingAppointments();
   }
 
-  async findUpcomingAppointmentsByPatientId(
-    patientId: string
-  ): Promise<Patient[]> {
-    return this.repository.findUpcomingAppointmentsByPatientId(patientId);
-  }
-
   async findPatientsByName(name: string): Promise<Patient[]> {
     return this.repository.findByName(name);
   }

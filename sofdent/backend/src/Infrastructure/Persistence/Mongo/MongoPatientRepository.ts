@@ -40,11 +40,11 @@ export class MongoPatientRepository implements PatientRepository {
   }
 
   async findById(id: string): Promise<Patient | null> {
-    return PatientModel.findOne({ idPatient: Number(id) });
+    return PatientModel.findOne({ idPatient: Number(id) }).lean();
   }
 
   async findAll(): Promise<Patient[]> {
-    return PatientModel.find();
+    return PatientModel.find().lean();
   }
 
   async update(patient: Patient): Promise<void> {
@@ -56,26 +56,18 @@ export class MongoPatientRepository implements PatientRepository {
   }
 
   async findInactiveSince(date: String): Promise<Patient[]> {
-    return PatientModel.find({ lastAppointment: date });
+    return PatientModel.find({ lastAppointment: date }).lean();
   }
 
   async findWithUpcomingAppointments(): Promise<Patient[]> {
     return PatientModel.find({
       upcomingAppointments: { $exists: true, $ne: [] },
-    });
-  }
-  async findUpcomingAppointmentsByPatientId(
-    patientId: string
-  ): Promise<Patient[]> {
-    return PatientModel.find({
-      id: patientId,
-      upcomingAppointments: { $exists: true, $ne: [] },
-    });
+    }).lean();
   }
   async findByName(name: string): Promise<Patient[]> {
     return PatientModel.find({
       "person.names": { $regex: name, $options: "i" },
-    });
+    }).lean();
   }
 }
 

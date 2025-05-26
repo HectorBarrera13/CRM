@@ -58,15 +58,6 @@ export const findPatientsWithUpcomingAppointments = async (
   res.json(patients);
 };
 
-export const findUpcomingAppointmentsByPatientId = async (
-  req: Request,
-  res: Response
-) => {
-  const patientId = req.params.id;
-  const patients = await service.findUpcomingAppointmentsByPatientId(patientId);
-  res.json(patients);
-};
-
 export const findPatientsByName = async (req: Request, res: Response) => {
   const name = req.params.name;
   const patients = await service.findPatientsByName(name);

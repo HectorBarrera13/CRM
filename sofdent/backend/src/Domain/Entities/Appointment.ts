@@ -3,9 +3,12 @@ import { Doctor } from "./Doctor";
 
 export class Appointment {
   constructor(
-    public day: string,
-    public hour: string,
-    public patient: Patient,
-    public doctor: Doctor
+    public idAppointment?: number | null,
+    public date?: string | null,
+    public hourStart?: string | null,
+    public hourEnd?: string | null,
+    public description?: string | null,
+    public patient?: Patient | null,
+    public doctor?: Doctor | null
   ) {}
 }

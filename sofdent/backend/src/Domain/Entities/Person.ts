@@ -1,11 +1,11 @@
 export class Person {
   constructor(
-    public readonly idPerson: number,
-    public name: string,
-    public lastName: string,
-    public birthday: string,
-    public address: string,
-    public phone: number,
-    public email: string
+    public readonly idPerson?: number | null,
+    public name?: string | null,
+    public lastName?: string | null,
+    public birthday?: string | null,
+    public address?: string | null,
+    public phone?: string | null,
+    public email?: string | null
   ) {}
 }
