@@ -64,3 +64,10 @@ export const findAppointmentsOfDay = async (req: Request, res: Response) => {
   const appointments = await service.findAppointmentsOfDay(day);
   res.json(appointments);
 };
+
+export const updateAppointmentTime = async (req: Request, res: Response) => {
+  const id = req.params.id; // ✅ del parámetro
+  const { start, end } = req.body;
+  await service.updateAppointmentTime(id, start, end);
+  res.status(200).json({ message: "Appointment time updated" });
+};

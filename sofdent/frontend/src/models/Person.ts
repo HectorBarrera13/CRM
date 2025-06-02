@@ -1,6 +1,9 @@
 export interface Person {
   idPerson: number | null;
-  name: String;
+  names: String;
+  lastNames: String;
   phone: String;
-  birthdate: String; //formato DD/MM/AAAA
+  address: String;
+  birthDate: String; //formato DD/MM/AAAA
+  email: String;
 }

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import type { Appointment } from "../../models/EventAppointment";
+import type { Appointment } from "../../models/Appointment";
 import FullCalendar from "@fullcalendar/react";
 
 export const useCalendarActions = () => {

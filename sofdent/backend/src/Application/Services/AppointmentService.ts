@@ -13,7 +13,17 @@ export class AppointmentService {
   }
 
   async getAllAppointments(): Promise<Appointment[]> {
-    return this.repository.findAll();
+    const appointments = await this.repository.findAll();
+    return appointments.map((appointment) => {
+      const start = `${appointment.date}T${appointment.timeStart}:00`;
+      const end = `${appointment.date}T${appointment.timeEnd}:00`;
+      return {
+        id: appointment.idAppointment,
+        title: appointment.title,
+        start,
+        end,
+      };
+    });
   }
 
   async updateAppointment(appointment: Appointment): Promise<void> {
@@ -34,5 +44,13 @@ export class AppointmentService {
 
   async findAppointmentsByDoctorId(doctorId: string): Promise<Appointment[]> {
     return this.repository.findAppointmentsByDoctorId(doctorId);
+  }
+
+  async updateAppointmentTime(
+    id: string,
+    start: string,
+    end: string
+  ): Promise<void> {
+    await this.repository.updateAppointmentTime(id, start, end);
   }
 }

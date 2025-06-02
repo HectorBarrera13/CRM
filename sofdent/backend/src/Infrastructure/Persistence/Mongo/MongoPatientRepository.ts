@@ -22,13 +22,31 @@ const patientSchema = new mongoose.Schema({
 //metodo para autoincrementar el idPatient
 patientSchema.pre("save", async function (next) {
   if (this.isNew) {
-    const counter = await Counter.findByIdAndUpdate(
+    // Generar idPatient
+    const patientCounter = await Counter.findByIdAndUpdate(
       { _id: "idPatient" },
       { $inc: { seq: 1 } },
       { upsert: true, new: true }
     );
-    this.idPatient = counter.seq;
+    this.idPatient = patientCounter?.seq;
+
+    // Generar idPerson
+    const personCounter = await Counter.findByIdAndUpdate(
+      { _id: "idPerson" },
+      { $inc: { seq: 1 } },
+      { upsert: true, new: true }
+    );
+
+    // Si this.person no existe, se crea con idPerson
+    if (!this.person) {
+      this.person = {
+        idPerson: personCounter?.seq || 1,
+      };
+    } else {
+      this.person.idPerson = personCounter?.seq || 1;
+    }
   }
+
   next();
 });
 

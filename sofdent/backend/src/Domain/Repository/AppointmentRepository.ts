@@ -6,4 +6,5 @@ export interface AppointmentRepository extends Repository<Appointment> {
   findAppointmentsOfDay(day: string): Promise<Appointment[]>;
   findAppointmentsByPatientId(patientId: string): Promise<Appointment[]>;
   findAppointmentsByDoctorId(doctorId: string): Promise<Appointment[]>;
+  updateAppointmentTime(id: string, start: string, end: string): Promise<void>;
 }
