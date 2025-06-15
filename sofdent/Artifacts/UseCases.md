@@ -1,3 +1,21 @@
+### ✅ Caso de uso: Crear una clinica
+
+**Actor:** Cliente
+
+**Precondiciones:** El usuario contrata el plan requerido
+
+**Flujo principal:**
+
+1. El usuario selecciona "Crear una clinica"
+2. Ingresa nombre, documento, teléfono y otros datos
+3. Confirma la operación
+4. El sistema guarda la clinica
+5. El sistema muestra la ventan principal del CRM
+
+**Postcondición:** El paciente queda registrado en la base de datos
+
+---
+
 ### ✅ Caso de uso: Registrar paciente
 
 **Actor:** Administrador

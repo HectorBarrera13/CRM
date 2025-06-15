@@ -1,62 +1,49 @@
 import { Request, Response } from "express";
-import { DoctorService } from "../../Application/Services/DoctorService";
-import { MongoDoctorRepository } from "../Persistence/Mongo/MongoDoctorRepository";
+import { MongoDoctorRepository } from "../Persistence/Mongo/Repositories/MongoDoctorRepository";
+import { CreateDoctor } from "../../Application/UseCases/Doctor/CreateDoctor";
+import { GetDoctorById } from "../../Application/UseCases/Doctor/GetDoctorById";
+import { GetAllDoctors } from "../../Application/UseCases/Doctor/GetAllDoctors";
+import { UpdateDoctor } from "../../Application/UseCases/Doctor/UpdateDoctor";
+import { DeleteDoctor } from "../../Application/UseCases/Doctor/DeleteDocor";
 
 const repository = new MongoDoctorRepository();
-const service = new DoctorService(repository);
+
+export const createDoctor = async (req: Request, res: Response) => {
+  const doctor = req.body;
+  const useCase = new CreateDoctor(repository);
+  await useCase.execute(doctor);
+  res.status(201).json({ message: "Doctor creado" });
+};
 
 export const getDoctorById = async (req: Request, res: Response) => {
-  const doctor = await service.getDoctorById(req.params.id);
-  if (!doctor) res.status(404).json({ message: "No encontrado" });
+  const doctorId = req.params.id;
+  const useCase = new GetDoctorById(repository);
+  const doctor = await useCase.execute(doctorId);
+  if (!doctor) {
+    return res.status(404).json({ message: "No encontrado" });
+  }
   res.json(doctor);
 };
 
 export const getAllDoctors = async (req: Request, res: Response) => {
-  const doctors = await service.getAllDoctors();
+  const useCase = new GetAllDoctors(repository);
+  const doctors = await useCase.execute();
+  if (!doctors || doctors.length === 0) {
+    return res.status(404).json({ message: "No se encontraron doctores" });
+  }
   res.json(doctors);
-};
-
-export const createDoctor = async (req: Request, res: Response) => {
-  const doctor = req.body;
-  await service.createDoctor(doctor);
-  res.status(201).json({ message: "Doctor creado" });
 };
 
 export const updateDoctor = async (req: Request, res: Response) => {
   const doctor = req.body;
-  await service.updateDoctor(doctor);
+  const useCase = new UpdateDoctor(repository);
+  await useCase.execute(doctor);
   res.status(200).json({ message: "Doctor actualizado" });
 };
 
 export const deleteDoctor = async (req: Request, res: Response) => {
-  const doctor = await service.getDoctorById(req.params.id);
-  if (!doctor) {
-    res.status(404).json({ message: "No encontrado" });
-    return;
-  }
-  await service.deleteDoctor(doctor);
-  res.status(200).json({ message: "Doctor eliminado" });
-};
-
-export const findDoctorsWithUpcomingAppointments = async (
-  req: Request,
-  res: Response
-) => {
-  const doctors = await service.findWithUpcomingAppointments();
-  res.json(doctors);
-};
-
-export const findUpcomingAppointmentsByDoctorId = async (
-  req: Request,
-  res: Response
-) => {
   const doctorId = req.params.id;
-  const doctors = await service.findUpcomingAppointmentsByDoctorId(doctorId);
-  res.json(doctors);
-};
-
-export const findDoctorsBySpeciality = async (req: Request, res: Response) => {
-  const speciality = req.params.speciality;
-  const doctors = await service.findBySpeciality(speciality);
-  res.json(doctors);
+  const useCase = new DeleteDoctor(repository);
+  await useCase.execute(doctorId);
+  res.status(200).json({ message: "Doctor eliminado" });
 };

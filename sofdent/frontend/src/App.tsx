@@ -5,12 +5,14 @@ import { useState } from "react";
 import ModalAppointmentForm from "./components/Modal/ModalAppointmentForm";
 import ModalPatientForm from "./components/Modal/ModalPatientForm";
 import type { Appointment } from "./models/Appointment";
+import ModalDoctorForm from "./components/Modal/ModalDoctorForm";
 import Card from "./components/Card/Card";
 
 function App() {
   const { calendarRef, addAppointment } = useCalendarActions();
   const [showModalAppointment, setShowModalAppointment] = useState(false);
   const [showModalPatient, setShowModalPatient] = useState(false);
+  const [showModalDoctor, setShowModalDoctor] = useState(false);
 
   const handleGuardarAppointment = (appointment: Appointment) => {
     addAppointment(appointment);
@@ -29,6 +31,9 @@ function App() {
       <Button onClick={() => setShowModalPatient(true)} isLoading={false}>
         Nuevo Paciente
       </Button>
+      <Button onClick={() => setShowModalDoctor(true)} isLoading={false}>
+        Nuevo Doctor
+      </Button>
       <ModalAppointmentForm
         show={showModalAppointment}
         onClose={() => setShowModalAppointment(false)}
@@ -37,6 +42,10 @@ function App() {
       <ModalPatientForm
         show={showModalPatient}
         onClose={() => setShowModalPatient(false)}
+      />
+      <ModalDoctorForm
+        show={showModalDoctor}
+        onClose={() => setShowModalDoctor(false)}
       />
       <Card className="mx-auto" size="grande">
         <h2 className="h5 mb-3">Calendario</h2>

@@ -12,6 +12,7 @@ export const useCalendarActions = () => {
       title: appointment.idPatient.toString(),
       start: new Date(appointment.startHour).toISOString(),
       end: new Date(appointment.finishHour).toISOString(),
+
       display: "block",
       backgroundColor: "blue",
     });

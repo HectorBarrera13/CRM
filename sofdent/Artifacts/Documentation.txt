@@ -1,0 +1,16 @@
+To add a new UseCase:
+1. Add it to the artifact UseCases
+2. Add it in src/Domain/Repository in its Repository correspondent
+3. Add it in src/Application/UseCases in its corresponding file
+4. Add it in src/Infrastructure/Controllers int its corresponding controller
+
+To add a new attribute to an excisting Entity:
+1. Add it to the desired class
+2. 
+
+To add a new Entity:
+1. Create the object in src/Application/Domain/Entities
+2. Create the Repository in src/Domain/Repository and add the unique nethods
+3. Create the Schema in src/Infrastructure/Persistence/Mongo/Schemas
+4. Create the MongoRepository in src/Infrastructure/Persistence/Mongo/Repositories
+5. Create the Service in src/Application/Services

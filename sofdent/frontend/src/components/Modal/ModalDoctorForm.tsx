@@ -13,12 +13,13 @@ const initialFormState = {
   email: "",
   address: "",
   birthDate: "",
-  lastAppointment: "",
+  speciality: "",
   upcomingAppointments: "",
+  color: "",
   debt: "",
 };
 
-const ModalPatientForm = ({ show, onClose }: Props) => {
+const ModalDoctorForm = ({ show, onClose }: Props) => {
   const [form, setForm] = useState(initialFormState);
 
   useEffect(() => {
@@ -48,9 +49,8 @@ const ModalPatientForm = ({ show, onClose }: Props) => {
     //   return;
     // }
 
-    const newPatient = {
-      idPatient: "0",
-      lastAppointment: form.lastAppointment,
+    const newDoctor = {
+      idDoctor: "0",
       upcomingAppointments: form.upcomingAppointments
         ? form.upcomingAppointments.split(",").map((date) => date.trim())
         : [],
@@ -67,36 +67,36 @@ const ModalPatientForm = ({ show, onClose }: Props) => {
     };
 
     try {
-      const res = await fetch("http://localhost:3000/api/patient/", {
+      const res = await fetch("http://localhost:3000/api/doctor/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newPatient),
+        body: JSON.stringify(newDoctor),
       });
 
-      if (!res.ok) throw new Error("Error al registrar el paciente");
+      if (!res.ok) throw new Error("Error al registrar el doctor");
 
-      alert("Paciente registrado correctamente");
+      alert("Doctor registrado correctamente");
       onClose(); // cerrar el modal
     } catch (error) {
       console.error("Error al guardar:", error);
-      console.log(newPatient);
-      alert("No se pudo registrar el paciente.");
+      console.log(newDoctor);
+      alert("No se pudo registrar el Doctor.");
     }
   };
 
   return (
     <Modal
       show={show}
-      title="Registrar paciente"
+      title="Registrar Doctor"
       onClose={onClose}
       footer={
         <button className="btn btn-primary" onClick={handleSubmit}>
-          Guardar paciente
+          Guardar Doctor
         </button>
       }
     >
       <div>
-        <h2>Registrar nuevo paciente</h2>
+        <h2>Registrar nuevo doctor</h2>
         <input
           type="text"
           placeholder="Nombres"
@@ -134,22 +134,6 @@ const ModalPatientForm = ({ show, onClose }: Props) => {
           onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
         />
         <input
-          type="text"
-          placeholder="Última cita (YYYY-MM-DD)"
-          value={form.lastAppointment}
-          onChange={(e) =>
-            setForm({ ...form, lastAppointment: e.target.value })
-          }
-        />
-        <input
-          type="text"
-          placeholder="Próximas citas (YYYY-MM-DD,YYYY-MM-DD)"
-          value={form.upcomingAppointments}
-          onChange={(e) =>
-            setForm({ ...form, upcomingAppointments: e.target.value })
-          }
-        />
-        <input
           type="number"
           placeholder="Deuda"
           value={form.debt}
@@ -160,4 +144,4 @@ const ModalPatientForm = ({ show, onClose }: Props) => {
   );
 };
 
-export default ModalPatientForm;
+export default ModalDoctorForm;

@@ -1,73 +1,49 @@
 import { Request, Response } from "express";
-import { AppointmentService } from "../../Application/Services/AppointmentService";
-import { MongoAppointmentRepository } from "../Persistence/Mongo/MongoAppointmentRepository";
+import { MongoAppointmentRepository } from "../Persistence/Mongo/Repositories/MongoAppointmentRepository";
+import { CreateAppointment } from "../../Application/UseCases/Appointments/CreateAppointment";
+import { GetAppointmentById } from "../../Application/UseCases/Appointments/GetAppointmentById";
+import { UpdateAppointment } from "../../Application/UseCases/Appointments/UpdateAppointment";
+import { GetAllAppointments } from "../../Application/UseCases/Appointments/GetAllAppointments";
+import { DeleteAppointment } from "../../Application/UseCases/Appointments/DeleteAppointment";
 
 const repository = new MongoAppointmentRepository();
-const service = new AppointmentService(repository);
+
+export const createAppointment = async (req: Request, res: Response) => {
+  const appointment = req.body;
+  const useCase = new CreateAppointment(repository);
+  await useCase.execute(appointment);
+  res.status(201).json({ message: "Appointment created" });
+};
 
 export const getAppointmentById = async (req: Request, res: Response) => {
-  const appointment = await service.getAppointmentById(req.params.id);
+  const idAppointment = req.params.id;
+  const useCase = new GetAppointmentById(repository);
+  const appointment = await useCase.execute(idAppointment);
   if (!appointment) {
-    res.status(404).json({ message: "Appointment not found" });
-    return;
+    return res.status(404).json({ message: "No encontrado" });
   }
   res.json(appointment);
 };
 
 export const getAllAppointments = async (req: Request, res: Response) => {
-  const appointments = await service.getAllAppointments();
+  const useCase = new GetAllAppointments(repository);
+  const appointments = await useCase.execute();
+  if (!appointments || appointments.length === 0) {
+    return res.status(404).json({ message: "No appointments found" });
+  }
   res.json(appointments);
-};
-
-export const createAppointment = async (req: Request, res: Response) => {
-  const appointment = req.body;
-  await service.createAppointment(appointment);
-  res.status(201).json({ message: "Appointment created" });
 };
 
 export const updateAppointment = async (req: Request, res: Response) => {
   const appointment = req.body;
-  await service.updateAppointment(appointment);
+  const useCase = new UpdateAppointment(repository);
+  await useCase.execute(appointment);
   res.status(200).json({ message: "Appointment updated" });
 };
 
 export const deleteAppointment = async (req: Request, res: Response) => {
-  const appointment = await service.getAppointmentById(req.params.id);
-  if (!appointment) {
-    res.status(404).json({ message: "Appointment not found" });
-    return;
-  }
-  await service.deleteAppointment(appointment);
+  const idAppointment = req.params.id;
+  const useCase = new DeleteAppointment(repository);
+  await useCase.execute(idAppointment);
   res.status(200).json({ message: "Appointment deleted" });
-};
-
-export const findAppointmentsByPatientId = async (
-  req: Request,
-  res: Response
-) => {
-  const patientId = req.params.patientId;
-  const appointments = await service.findAppointmentsByPatientId(patientId);
-  res.json(appointments);
-};
-
-export const findAppointmentsByDoctorId = async (
-  req: Request,
-  res: Response
-) => {
-  const doctorId = req.params.doctorId;
-  const appointments = await service.findAppointmentsByDoctorId(doctorId);
-  res.json(appointments);
-};
-
-export const findAppointmentsOfDay = async (req: Request, res: Response) => {
-  const day = req.params.day;
-  const appointments = await service.findAppointmentsOfDay(day);
-  res.json(appointments);
-};
-
-export const updateAppointmentTime = async (req: Request, res: Response) => {
-  const id = req.params.id; // ✅ del parámetro
-  const { start, end } = req.body;
-  await service.updateAppointmentTime(id, start, end);
-  res.status(200).json({ message: "Appointment time updated" });
 };

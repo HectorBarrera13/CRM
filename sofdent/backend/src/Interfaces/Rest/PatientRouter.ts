@@ -6,9 +6,6 @@ import {
   createPatient,
   updatePatient,
   deletePatient,
-  findInactivePatientsSince,
-  findPatientsWithUpcomingAppointments,
-  findPatientsByName,
 } from "../../Infrastructure/Controllers/PatientController";
 
 export const patientRouter = express.Router();
@@ -18,7 +15,3 @@ patientRouter.get("/:id", getPatientById);
 patientRouter.post("/", createPatient);
 patientRouter.put("/", updatePatient);
 patientRouter.delete("/:id", deletePatient);
-
-patientRouter.get("/inactive/:date", findInactivePatientsSince);
-patientRouter.get("/with-upcoming", findPatientsWithUpcomingAppointments);
-patientRouter.get("/name/:name", findPatientsByName);
