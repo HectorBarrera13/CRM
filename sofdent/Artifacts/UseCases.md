@@ -197,3 +197,37 @@
 **Postcondición:** El usuario puede operar en ambas áreas sin restricción
 
 ---
+
+### ✅ Caso de uso: Buscar al paciente por su nombre
+
+**Actor:** Usuario con rol Administrador
+
+**Precondiciones:** Ha iniciado sesión como usuario permisos
+
+**Flujo principal:**
+
+1. El usuario ingresa el nombre
+2. El sistema busca en nombre en los objetos "person", lueog busca el id obtenido en "patient" y muestra si aparecen coincidencias
+3. El usuario selecciona si es el mismo usuario o no
+4. En caso de no serlo, el sistema crea el usuario
+5. En caso de serlo, el sistema lo selecciona
+
+**Postcondición:** Se crea el usuario
+
+---
+
+### ✅ Caso de uso: Buscar a la persona por su nombre
+
+**Actor:** Usuario con rol Administrador
+
+**Precondiciones:** Ha iniciado sesión como usuario permisos
+
+**Flujo principal:**
+
+1. El usuario ingresa el nombre
+2. El sistema busca y muestra si aparecen coincidencias
+3. El usuario selecciona si es el mismo usuario o no
+4. En caso de no serlo, el sistema crea el usuario
+5. En caso de serlo, el sistema lo selecciona
+
+**Postcondición:** Se crea el usuario

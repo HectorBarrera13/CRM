@@ -6,9 +6,13 @@ const doctorSchema = new mongoose.Schema({
   speciality: String,
   color: String,
   idPerson: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     ref: "Person",
     required: true,
+  },
+  debt: {
+    type: Number,
+    default: 0,
   },
 });
 

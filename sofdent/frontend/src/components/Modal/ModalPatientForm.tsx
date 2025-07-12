@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Modal from "./Modal";
+import { createPatient } from "../../api/apiPatient";
 
 interface Props {
   show: boolean;
@@ -13,8 +14,6 @@ const initialFormState = {
   email: "",
   address: "",
   birthDate: "",
-  lastAppointment: "",
-  upcomingAppointments: "",
   debt: "",
 };
 
@@ -28,58 +27,52 @@ const ModalPatientForm = ({ show, onClose }: Props) => {
   }, [show]);
 
   const handleSubmit = async () => {
-    if (!form.names.trim()) {
-      alert("El nombre es obligatorio.");
-      return;
-    }
-
-    if (!form.phone.trim()) {
-      alert("El teléfono es obligatorio.");
-      return;
-    }
-
-    // if (!/^\d{2}\/\d{2}\/\d{4}$/.test(form.birthdate)) {
-    //   alert("La fecha de nacimiento debe tener el formato DD/MM/AAAA.");
-    //   return;
-    // }
-
-    // if (isNaN(form.debt) || form.debt < 0) {
-    //   alert("La deuda debe ser un número válido.");
-    //   return;
-    // }
-
+    //Crear un nuevo paciente y una nueva persona
+    const newPerson = {
+      idPerson: "0",
+      names: form.names,
+      lastNames: form.lastNames,
+      birthDate: form.birthDate,
+      address: form.address,
+      phone: form.phone,
+      email: form.email,
+    };
     const newPatient = {
-      idPatient: "0",
-      lastAppointment: form.lastAppointment,
-      upcomingAppointments: form.upcomingAppointments
-        ? form.upcomingAppointments.split(",").map((date) => date.trim())
-        : [],
-      debt: parseFloat(form.debt) || 0,
-      person: {
-        idPerson: "0",
-        names: form.names,
-        lastName: form.lastNames,
-        birthDate: form.birthDate,
-        address: form.address,
-        phone: form.phone,
-        email: form.email,
-      },
+      idPatient: "0", // se asignará después
+      idPerson: "0", // se asignará después
+      lastAppointmentId: null, // se asignará después
+      debt: parseFloat(form.debt),
     };
 
     try {
-      const res = await fetch("http://localhost:3000/api/patient/", {
+      // Primero, crear la persona
+      const resPerson = await fetch(`http://localhost:3000/api/person/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newPatient),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newPerson),
       });
 
-      if (!res.ok) throw new Error("Error al registrar el paciente");
+      const dataPerson = await resPerson.json();
 
-      alert("Paciente registrado correctamente");
-      onClose(); // cerrar el modal
+      // Si la persona se creó correctamente o ya existe, crear el paciente
+      if (resPerson.status === 201 || resPerson.status === 409) {
+        newPatient.idPerson = dataPerson.idPerson; // asignar el ID de la persona creada
+        const { status: patientStatus, data: patientData } =
+          await createPatient(newPatient);
+
+        // Si el paciente se creó correctamente, mostrar mensaje de éxito
+        if (patientStatus === 201 || patientStatus === 409) {
+          alert("✅ " + patientData); //
+          onClose(); // cerrar el modal
+        }
+      } else {
+        alert("⚠️ " + dataPerson.message); // mensaje de error como "Ya existe una persona..."
+      }
     } catch (error) {
       console.error("Error al guardar:", error);
-      console.log(newPatient);
+
       alert("No se pudo registrar el paciente.");
     }
   };
@@ -133,22 +126,7 @@ const ModalPatientForm = ({ show, onClose }: Props) => {
           value={form.birthDate}
           onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
         />
-        <input
-          type="text"
-          placeholder="Última cita (YYYY-MM-DD)"
-          value={form.lastAppointment}
-          onChange={(e) =>
-            setForm({ ...form, lastAppointment: e.target.value })
-          }
-        />
-        <input
-          type="text"
-          placeholder="Próximas citas (YYYY-MM-DD,YYYY-MM-DD)"
-          value={form.upcomingAppointments}
-          onChange={(e) =>
-            setForm({ ...form, upcomingAppointments: e.target.value })
-          }
-        />
+
         <input
           type="number"
           placeholder="Deuda"

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Modal from "./Modal";
 import type { Appointment } from "../../models/Appointment";
 import { mapAppointmentToBackend } from "./mapAppointmentToBackend";
+import { searchPersonByName } from "../../api/apiPerson";
 
 interface Props {
   show: boolean;
@@ -11,12 +12,10 @@ interface Props {
 
 const ModalAppointmentForm = ({ show, onClose, onGuardar }: Props) => {
   const [form, setForm] = useState({
-    patientName: "",
-    patientLastName: "",
-    idPatient: "",
-    doctorName: "",
-    doctorLastName: "",
-    idDoctor: "",
+    patientNames: "",
+    patientLastNames: "",
+    doctorNames: "",
+    doctorLastNames: "",
     day: "",
     startTime: "",
     endTime: "",
@@ -35,10 +34,10 @@ const ModalAppointmentForm = ({ show, onClose, onGuardar }: Props) => {
 
     const newAppointment: Appointment = {
       idAppointment: "",
-      idPatient: form.idPatient,
-      idDoctor: form.idDoctor,
-      title: form.patientName,
-      description: form.patientLastName,
+      idPatient: "0",
+      idDoctor: "0",
+      title: form.patientNames,
+      description: form.patientLastNames,
       startHour,
       finishHour,
     };
@@ -81,47 +80,70 @@ const ModalAppointmentForm = ({ show, onClose, onGuardar }: Props) => {
     >
       <input
         type="text"
-        name="fake-patient-name"
+        name="fake-patient-names"
         autoComplete="new-password"
-        placeholder="Nombre del paciente"
-        value={form.patientName}
+        placeholder="Nombres del paciente"
+        value={form.patientNames}
         onChange={async (e) => {
           const name = e.target.value;
-          const lastName = e.target.value;
           setForm({
             ...form,
-            patientName: name,
-            idPatient: "",
-            patientLastName: lastName,
+            patientNames: name,
           });
 
-          if (name.length < 2) {
-            setPatientResults([]);
-            return;
-          }
+          setPatientResults([]);
 
-          const res = await fetch(
-            `http://localhost:3000/api/patient/name/${name}`
-          );
-          const results = await res.json();
-          setPatientResults(results);
+          if (name.length >= 2) {
+            const { status, data } = await searchPersonByName(name);
+            setPatientResults(data);
+            if (status !== 200) {
+              console.error("Error al buscar paciente:", data);
+              setPatientResults([]);
+            }
+          }
+          return;
+        }}
+      />
+      <input
+        type="text"
+        name="fake-patient-lastNames"
+        autoComplete="new-password"
+        placeholder="Apellidos del paciente"
+        value={form.patientLastNames}
+        onChange={async (e) => {
+          const lastNames = e.target.value;
+          setForm({
+            ...form,
+            patientLastNames: lastNames,
+          });
+
+          setPatientResults([]);
+
+          if (lastNames.length >= 2) {
+            const { status, data } = await searchPersonByName(lastNames);
+            setPatientResults(data);
+            if (status !== 200) {
+              console.error("Error al buscar paciente:", data);
+              setPatientResults([]);
+            }
+          }
+          return;
         }}
       />
       <ul className="autocomplete-list-patient">
-        {patientResults.map((patient) => (
+        {patientResults.map((person) => (
           <li
-            key={patient.idPatient}
+            key={person.idPatient}
             onClick={() => {
               setForm({
                 ...form,
-                patientName: patient.person.names,
-                patientLastName: patient.person.lastName,
-                idPatient: patient.idPatient,
+                patientNames: person.names,
+                patientLastNames: person.lastNames,
               });
               setPatientResults([]);
             }}
           >
-            {patient.person.names + " " + patient.person.lastName}
+            {person.names + " " + person.lastNames}
           </li>
         ))}
       </ul>
@@ -130,10 +152,10 @@ const ModalAppointmentForm = ({ show, onClose, onGuardar }: Props) => {
         name="fake-doctor-name"
         autoComplete="new-password"
         placeholder="Nombre del doctor"
-        value={form.doctorName}
+        value={form.doctorNames}
         onChange={async (e) => {
           const name = e.target.value;
-          setForm({ ...form, doctorName: name, idDoctor: "" });
+          setForm({ ...form, doctorNames: name, idDoctor: "" });
 
           if (name.length < 2) {
             setDoctorResults([]);

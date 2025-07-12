@@ -1,8 +1,6 @@
-import type { Person } from "./Person";
-
-export interface Patient extends Person {
-  idPatient: number | null;
-  lastAppointment: String;
-  upcomingAppointments: String;
+export interface Patient {
+  idPatient: string | null;
+  idPerson: string | null;
+  lastAppointmentId: number | null;
   debt: number;
 }

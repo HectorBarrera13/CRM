@@ -3,12 +3,13 @@ import { Counter } from "../../../../Domain/Counter";
 
 const patientSchema = new mongoose.Schema({
   idPatient: { type: Number, required: true, unique: true },
-  lastAppointment: String,
   idPerson: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     ref: "Person",
     required: true,
   },
+  lastAppointmentId: { type: Number, default: null },
+  debt: { type: Number, default: 0 },
 });
 
 //metodo para autoincrementar el idPatient

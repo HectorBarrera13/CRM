@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Modal from "./Modal";
+import { createDoctor } from "../../api/apiDoctor";
+import { createPerson } from "../../api/apiPerson";
 
 interface Props {
   show: boolean;
@@ -14,7 +16,6 @@ const initialFormState = {
   address: "",
   birthDate: "",
   speciality: "",
-  upcomingAppointments: "",
   color: "",
   debt: "",
 };
@@ -29,57 +30,47 @@ const ModalDoctorForm = ({ show, onClose }: Props) => {
   }, [show]);
 
   const handleSubmit = async () => {
-    if (!form.names.trim()) {
-      alert("El nombre es obligatorio.");
-      return;
-    }
-
-    if (!form.phone.trim()) {
-      alert("El teléfono es obligatorio.");
-      return;
-    }
-
-    // if (!/^\d{2}\/\d{2}\/\d{4}$/.test(form.birthdate)) {
-    //   alert("La fecha de nacimiento debe tener el formato DD/MM/AAAA.");
-    //   return;
-    // }
-
-    // if (isNaN(form.debt) || form.debt < 0) {
-    //   alert("La deuda debe ser un número válido.");
-    //   return;
-    // }
-
+    const newPerson = {
+      idPerson: "0",
+      names: form.names,
+      lastNames: form.lastNames,
+      birthDate: form.birthDate,
+      address: form.address,
+      phone: form.phone,
+      email: form.email,
+    };
     const newDoctor = {
-      idDoctor: "0",
-      upcomingAppointments: form.upcomingAppointments
-        ? form.upcomingAppointments.split(",").map((date) => date.trim())
-        : [],
-      debt: parseFloat(form.debt) || 0,
-      person: {
-        idPerson: "0",
-        names: form.names,
-        lastName: form.lastNames,
-        birthDate: form.birthDate,
-        address: form.address,
-        phone: form.phone,
-        email: form.email,
-      },
+      idDoctor: "0", // se asignará después
+      idPerson: "0", // se asignará después
+      color: form.color,
+      speciality: form.speciality,
+      debt: parseFloat(form.debt),
     };
 
     try {
-      const res = await fetch("http://localhost:3000/api/doctor/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newDoctor),
-      });
+      // Primero, crear la persona
+      const { status: personStatus, data: personData } = await createPerson(
+        newPerson
+      );
 
-      if (!res.ok) throw new Error("Error al registrar el doctor");
+      // Si la persona se creó correctamente o ya existe, crear el paciente
+      if (personStatus === 201 || personStatus === 409) {
+        newDoctor.idPerson = personData.idPerson ?? "0"; // asignar el ID de la persona creada
 
-      alert("Doctor registrado correctamente");
-      onClose(); // cerrar el modal
+        const { status: doctorStatus, data: doctorData } = await createDoctor(
+          newDoctor
+        );
+        // Si el paciente se creó correctamente, mostrar mensaje de éxito
+        if (doctorStatus === 201 || doctorStatus === 409) {
+          alert("✅ " + doctorData); //
+          onClose(); // cerrar el modal
+        }
+      } else {
+        alert("⚠️ " + personData.message); // mensaje de error como "Ya existe una persona..."
+      }
     } catch (error) {
       console.error("Error al guardar:", error);
-      console.log(newDoctor);
+
       alert("No se pudo registrar el Doctor.");
     }
   };
@@ -138,6 +129,17 @@ const ModalDoctorForm = ({ show, onClose }: Props) => {
           placeholder="Deuda"
           value={form.debt}
           onChange={(e) => setForm({ ...form, debt: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Especialidad"
+          value={form.speciality}
+          onChange={(e) => setForm({ ...form, speciality: e.target.value })}
+        />
+        <input
+          type="color"
+          value={form.color}
+          onChange={(e) => setForm({ ...form, color: e.target.value })}
         />
       </div>
     </Modal>

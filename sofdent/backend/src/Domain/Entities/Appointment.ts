@@ -12,4 +12,17 @@ export class Appointment {
     public idPatient?: string | null,
     public idDoctor?: string | null
   ) {}
+
+  public static createAppointment(obj: any): Appointment {
+    return new Appointment(
+      obj.idAppointment,
+      obj.title,
+      obj.description,
+      obj.date,
+      obj.timeStart,
+      obj.timeEnd,
+      obj.idPatient,
+      obj.idDoctor
+    );
+  }
 }

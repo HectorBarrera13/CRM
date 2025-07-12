@@ -3,10 +3,10 @@ export class Person {
     public readonly idPerson?: number | null,
     public names?: string | null,
     public lastNames?: string | null,
-    public birthDate?: string | null,
-    public address?: string | null,
+    public email?: string | null,
     public phone?: string | null,
-    public email?: string | null
+    public address?: string | null,
+    public birthDate?: string | null
   ) {}
 
   static createPerson(obj: any): Person {

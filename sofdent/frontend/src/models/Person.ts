@@ -1,9 +1,9 @@
 export interface Person {
-  idPerson: number | null;
-  names: String;
-  lastNames: String;
-  phone: String;
-  address: String;
-  birthDate: String; //formato DD/MM/AAAA
-  email: String;
+  idPerson: string | null;
+  names: string;
+  lastNames: string;
+  phone: string;
+  address: string;
+  birthDate: string; //formato DD/MM/AAAA
+  email: string;
 }

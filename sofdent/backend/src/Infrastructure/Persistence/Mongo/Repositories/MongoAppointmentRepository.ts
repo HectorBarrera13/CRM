@@ -12,7 +12,8 @@ export class MongoAppointmentRepository implements AppointmentRepository {
   }
 
   async findAll(): Promise<Appointment[]> {
-    throw new Error("Method not implemented.");
+    const appointments = await AppointmentModel.find();
+    return appointments.map((doc) => Appointment.createAppointment(doc));
   }
 
   async update(appointment: Appointment): Promise<void> {

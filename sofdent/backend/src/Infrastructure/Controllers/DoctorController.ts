@@ -22,7 +22,7 @@ export const getDoctorById = async (req: Request, res: Response) => {
   if (!doctor) {
     return res.status(404).json({ message: "No encontrado" });
   }
-  res.json(doctor);
+  return res.json(doctor);
 };
 
 export const getAllDoctors = async (req: Request, res: Response) => {
@@ -31,14 +31,14 @@ export const getAllDoctors = async (req: Request, res: Response) => {
   if (!doctors || doctors.length === 0) {
     return res.status(404).json({ message: "No se encontraron doctores" });
   }
-  res.json(doctors);
+  return res.json(doctors);
 };
 
 export const updateDoctor = async (req: Request, res: Response) => {
   const doctor = req.body;
   const useCase = new UpdateDoctor(repository);
   await useCase.execute(doctor);
-  res.status(200).json({ message: "Doctor actualizado" });
+  return res.status(200).json({ message: "Doctor actualizado" });
 };
 
 export const deleteDoctor = async (req: Request, res: Response) => {

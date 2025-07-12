@@ -1,7 +1,7 @@
 export interface Repository<T> {
-  save(entity: T): Promise<void>;
-  update(entity: T): Promise<void>;
-  delete(entity: T): Promise<void>;
+  save(entity: T): Promise<T>;
+  update(entity: T): Promise<T>;
+  delete(entity: T): Promise<T>;
   findById(id: string): Promise<T | null>;
   findAll(): Promise<T[]>;
 }
