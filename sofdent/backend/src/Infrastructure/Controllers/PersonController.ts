@@ -67,16 +67,3 @@ export const deletePerson = async (req: Request, res: Response) => {
   await useCase.execute(idPerson);
   res.status(200).json({ message: "Persona eliminada" });
 };
-
-export const findByName = async (req: Request, res: Response) => {
-  const name = req.params.name;
-  const useCase = new FindByName(repository);
-  try {
-    const persons = await useCase.execute(name);
-    return res.json(persons);
-  } catch (error) {
-    return res
-      .status(404)
-      .json({ message: "No se encontraron personas con ese nombre" });
-  }
-};

@@ -31,6 +31,12 @@ export class MongoPatientRepository implements PatientRepository {
     await PatientModel.deleteOne({ idPatient: patient.idPatient });
     return patient;
   }
+
+  async findByPersonId(idPerson: number): Promise<Patient | null> {
+    const doc = await PatientModel.findOne({ idPerson }).lean();
+    if (!doc) return null;
+    return Patient.createPatient(doc);
+  }
 }
 
 //return (await PatientModel.find()).map(doc => new Patient(

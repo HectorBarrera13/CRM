@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import { createDoctor } from "../../api/apiDoctor";
-import { createPerson } from "../../api/apiPerson";
 
 interface Props {
   show: boolean;
@@ -48,29 +47,17 @@ const ModalDoctorForm = ({ show, onClose }: Props) => {
     };
 
     try {
-      // Primero, crear la persona
-      const { status: personStatus, data: personData } = await createPerson(
-        newPerson
+      const { status: doctorStatus, data: doctorData } = await createDoctor(
+        newPerson,
+        newDoctor
       );
 
-      // Si la persona se creó correctamente o ya existe, crear el paciente
-      if (personStatus === 201 || personStatus === 409) {
-        newDoctor.idPerson = personData.idPerson ?? "0"; // asignar el ID de la persona creada
-
-        const { status: doctorStatus, data: doctorData } = await createDoctor(
-          newDoctor
-        );
-        // Si el paciente se creó correctamente, mostrar mensaje de éxito
-        if (doctorStatus === 201 || doctorStatus === 409) {
-          alert("✅ " + doctorData); //
-          onClose(); // cerrar el modal
-        }
-      } else {
-        alert("⚠️ " + personData.message); // mensaje de error como "Ya existe una persona..."
+      if (doctorStatus === 201) {
+        alert("Doctor registrado correctamente.");
+        onClose(); // Cerrar el modal después de guardar
       }
     } catch (error) {
       console.error("Error al guardar:", error);
-
       alert("No se pudo registrar el Doctor.");
     }
   };

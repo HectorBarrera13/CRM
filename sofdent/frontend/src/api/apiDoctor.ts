@@ -1,4 +1,5 @@
 import type { Doctor } from "../models/Doctor";
+import type { Person } from "../models/Person";
 
 export interface DoctorResponse {
   message: string;
@@ -6,12 +7,13 @@ export interface DoctorResponse {
 }
 
 export const createDoctor = async (
+  person: Person,
   doctor: Doctor
 ): Promise<{ status: number; data: DoctorResponse }> => {
   const res = await fetch("http://localhost:3000/api/doctor/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(doctor),
+    body: JSON.stringify({ person, doctor }),
   });
 
   const data = (await res.json()) as DoctorResponse;

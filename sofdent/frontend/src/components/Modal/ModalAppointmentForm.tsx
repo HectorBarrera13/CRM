@@ -2,7 +2,7 @@ import { useState } from "react";
 import Modal from "./Modal";
 import type { Appointment } from "../../models/Appointment";
 import { mapAppointmentToBackend } from "./mapAppointmentToBackend";
-import { searchPersonByName } from "../../api/apiPerson";
+import { searchPatientByName } from "../../api/apiPatient";
 
 interface Props {
   show: boolean;
@@ -92,9 +92,9 @@ const ModalAppointmentForm = ({ show, onClose, onGuardar }: Props) => {
           });
 
           setPatientResults([]);
-
+          console.log("Buscando paciente por nombre:", name);
           if (name.length >= 2) {
-            const { status, data } = await searchPersonByName(name);
+            const { status, data } = await searchPatientByName(name);
             setPatientResults(data);
             if (status !== 200) {
               console.error("Error al buscar paciente:", data);
@@ -120,7 +120,7 @@ const ModalAppointmentForm = ({ show, onClose, onGuardar }: Props) => {
           setPatientResults([]);
 
           if (lastNames.length >= 2) {
-            const { status, data } = await searchPersonByName(lastNames);
+            const { status, data } = await searchPatientByName(lastNames);
             setPatientResults(data);
             if (status !== 200) {
               console.error("Error al buscar paciente:", data);
@@ -155,7 +155,7 @@ const ModalAppointmentForm = ({ show, onClose, onGuardar }: Props) => {
         value={form.doctorNames}
         onChange={async (e) => {
           const name = e.target.value;
-          setForm({ ...form, doctorNames: name, idDoctor: "" });
+          setForm({ ...form, doctorNames: name });
 
           if (name.length < 2) {
             setDoctorResults([]);
@@ -176,9 +176,8 @@ const ModalAppointmentForm = ({ show, onClose, onGuardar }: Props) => {
             onClick={() => {
               setForm({
                 ...form,
-                doctorName: doctor.person.names,
-                doctorLastName: doctor.person.lastName,
-                idDoctor: doctor.idDoctor,
+                doctorNames: doctor.person.names,
+                doctorLastNames: doctor.person.lastName,
               });
               setDoctorResults([]);
             }}

@@ -45,28 +45,15 @@ const ModalPatientForm = ({ show, onClose }: Props) => {
     };
 
     try {
-      // Primero, crear la persona
-      const resPerson = await fetch(`http://localhost:3000/api/person/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newPerson),
-      });
-
-      const dataPerson = await resPerson.json();
-
-      // Si la persona se creó correctamente o ya existe, crear el paciente
-      if (resPerson.status === 201 || resPerson.status === 409) {
-        newPatient.idPerson = dataPerson.idPerson; // asignar el ID de la persona creada
-        const { status: patientStatus, data: patientData } =
-          await createPatient(newPatient);
-
-        // Si el paciente se creó correctamente, mostrar mensaje de éxito
-        if (patientStatus === 201 || patientStatus === 409) {
-          alert("✅ " + patientData); //
-          onClose(); // cerrar el modal
-        }
+      const { status: patientStatus, data: dataPerson } = await createPatient(
+        newPerson,
+        newPatient
+      );
+      if (patientStatus === 201 || patientStatus === 200) {
+        alert("Paciente registrado correctamente.");
+        onClose(); // Cerrar el modal después de guardar
+      } else if (patientStatus === 409) {
+        alert("⚠️ " + dataPerson.message); // mensaje de error como "Ya existe una persona..."
       } else {
         alert("⚠️ " + dataPerson.message); // mensaje de error como "Ya existe una persona..."
       }

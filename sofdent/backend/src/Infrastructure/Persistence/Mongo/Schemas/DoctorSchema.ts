@@ -9,6 +9,7 @@ const doctorSchema = new mongoose.Schema({
     type: Number,
     ref: "Person",
     required: true,
+    unique: true,
   },
   debt: {
     type: Number,

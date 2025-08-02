@@ -231,3 +231,5 @@
 5. En caso de serlo, el sistema lo selecciona
 
 **Postcondición:** Se crea el usuario
+
+### Encontrar doctor por id persona

@@ -6,6 +6,7 @@ import {
   createPatient,
   updatePatient,
   deletePatient,
+  findPatietnByName,
 } from "../../Infrastructure/Controllers/PatientController";
 
 export const patientRouter = express.Router();
@@ -15,3 +16,4 @@ patientRouter.get("/:id", getPatientById);
 patientRouter.post("/", createPatient);
 patientRouter.put("/", updatePatient);
 patientRouter.delete("/:id", deletePatient);
+patientRouter.get("/search/:name", findPatietnByName);

@@ -27,4 +27,10 @@ export class MongoDoctorRepository implements DoctorRepository {
     await DoctorModel.deleteOne({ idDoctor: doctor.idDoctor });
     return doctor;
   }
+
+  async findByPersonId(idPerson: number): Promise<Doctor | null> {
+    const doc = await DoctorModel.findOne({ idPerson }).lean();
+    if (!doc) return null;
+    return Doctor.createDoctor(doc);
+  }
 }
