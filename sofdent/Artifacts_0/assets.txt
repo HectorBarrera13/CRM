@@ -1,0 +1,10 @@
+
+-para instalar mongo
+brew tap mongodb/brew
+brew install mongodb-community@6.0
+
+-iniciar el servidor de mongo con
+brew services start mongodb-community@6.0
+
+-para correr backend
+npm run dev
