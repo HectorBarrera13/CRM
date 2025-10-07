@@ -1,6 +1,11 @@
 export class Treatment {
-  private readonly idTreatment: number;
-  private treatmentName: String;
-  private estimatedPrice: Number;
-  private estimatedDuration: Number;
+  private idTreatment: Number;
+
+  constructor(
+    private treatmentName: String,
+    private estimatedPrice: Number,
+    private estimatedDuration: Number
+  ) {
+    this, (this.idTreatment = 0);
+  }
 }

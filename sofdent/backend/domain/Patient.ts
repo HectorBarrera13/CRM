@@ -1,4 +1,10 @@
+import { MedicalHistory } from "./MedicalHistory";
+import { Person } from "./Person";
+
 export class Patient {
-  private readonly id: Number;
-  private medicalHistory: MedicalHistory;
+  private idPatient: Number;
+
+  constructor(private person: Person, private medicalHistory: MedicalHistory) {
+    this.idPatient = 0;
+  }
 }
