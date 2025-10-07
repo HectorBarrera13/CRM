@@ -1,6 +1,11 @@
 export class Payment {
   private readonly idPayment;
-  private date: Date;
-  private amount: Number;
-  private paymentMethod: String;
+
+  constructor(
+    private date: Date,
+    private amount: Number,
+    private paymentMethod: String
+  ) {
+    this.idPayment = 0;
+  }
 }

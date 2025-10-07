@@ -1,5 +1,7 @@
 export class User {
-  private readonly isUser: Number;
-  private login: String;
-  private hash: String;
+  private idUser: Number;
+
+  constructor(private login: String, private hash: String) {
+    this.idUser = 0;
+  }
 }
