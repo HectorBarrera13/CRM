@@ -3,8 +3,6 @@ import { Doctor } from "./Doctor";
 import { Procedure } from "./Procedure";
 import { ConsultingRoom } from "./ConsultingRoom";
 import { Treatment } from "./Treatment";
-import { IDoctorAvailabilityChecker } from "../../application/ports/IDoctorAvailabilityChecker"; //Interface
-import { IRoomAvailabilityChecker } from "../../application/ports/IRoomAvailabilityChecker"; //Interface
 import { ValidTime } from "../valueObjects/ValidTime";
 import { ValidDate } from "../valueObjects/ValidDate";
 
@@ -156,68 +154,21 @@ export class Appointment {
     this._state = "NoShow";
   }
 
-  async reSchedule(
+  reSchedule(
     newDate: ValidDate,
     newStartHour: ValidTime,
-    newDurationHours: number,
-    roomAvailabilityChecker: IRoomAvailabilityChecker,
-    doctorAvailabilityChecker: IDoctorAvailabilityChecker
-  ): Promise<void> {
+    newDurationHours: number
+  ): void {
     if (this._state === "Completed" || this._state === "Canceled") {
       throw new Error("No se puede reprogramar una cita no activa");
     }
-    const roomIsAvailable: boolean = await roomAvailabilityChecker.isAvailable(
-      this._room.idRoom,
-      newDate,
-      newStartHour,
-      newDurationHours
-    );
-    const doctorIsAvailable: boolean =
-      await doctorAvailabilityChecker.isAvailable(
-        this._doctor.idDoctor,
-        newDate,
-        newStartHour,
-        newDurationHours
-      );
-    if (roomIsAvailable && doctorIsAvailable) {
-      this.startHour = newStartHour;
-      this.durationHours = newDurationHours;
-      this._durationHours = newDurationHours;
-      this.state = "Scheduled";
-    }
+    this._date = newDate;
+    this._startHour = newStartHour;
+    this._durationHours = newDurationHours;
+    this._state = "Scheduled";
   }
 
   addProcedure(treatments: Treatment[]): void {
     this._procedure.addTreatments(treatments);
-  }
-
-  async changeDoctor(
-    newDoctor: Doctor,
-    doctorAvailabilityChecker: IDoctorAvailabilityChecker
-  ) {
-    const doctorIsAvailable = await doctorAvailabilityChecker.isAvailable(
-      newDoctor.idDoctor,
-      this._date,
-      this._startHour,
-      this._durationHours
-    );
-    if (doctorIsAvailable) {
-      this._doctor = newDoctor;
-    }
-  }
-
-  async changeRoom(
-    newRoom: ConsultingRoom,
-    roomAvailabilityChecker: IRoomAvailabilityChecker
-  ) {
-    const roomIsAvailable = await roomAvailabilityChecker.isAvailable(
-      newRoom.idRoom,
-      this._date,
-      this._startHour,
-      this._durationHours
-    );
-    if (roomIsAvailable) {
-      this._room = newRoom;
-    }
   }
 }

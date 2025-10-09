@@ -1,5 +1,5 @@
 export class MedicalHistory {
-  private idMedicalHistory: Number;
+  private idMedicalHistory: number;
 
   constructor() {
     this.idMedicalHistory = 0;

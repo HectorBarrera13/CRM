@@ -1,7 +1,10 @@
 export class ConsultingRoom {
   private _idRoom: number;
-  constructor() {
+  private _roomName: string;
+
+  constructor(roomName: string) {
     this._idRoom = 0;
+    this._roomName = roomName;
   }
 
   get idRoom(): number {
