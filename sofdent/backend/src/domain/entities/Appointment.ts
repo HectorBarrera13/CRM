@@ -1,6 +1,5 @@
 import { Patient } from "./Patient";
 import { Doctor } from "./Doctor";
-import { Procedure } from "./Procedure";
 import { ConsultingRoom } from "./ConsultingRoom";
 import { Treatment } from "./Treatment";
 import { ValidTime } from "../valueObjects/ValidTime";
@@ -23,7 +22,7 @@ export class Appointment {
   private _motive?: string;
   private _patient!: Patient;
   private _doctor!: Doctor;
-  private _procedure!: Procedure;
+  private _treatments!: Treatment[];
   private _room!: ConsultingRoom;
   private _state: AppointmentState = "Scheduled";
 
@@ -34,7 +33,7 @@ export class Appointment {
     location: string,
     patient: Patient,
     doctor: Doctor,
-    procedure: Procedure,
+    treatments: Treatment[],
     room: ConsultingRoom
   ) {
     this._startHour = startHour;
@@ -43,7 +42,7 @@ export class Appointment {
     this._location = location;
     this._patient = patient;
     this._doctor = doctor;
-    this._procedure = procedure;
+    this._treatments = treatments;
     this._room = room;
   }
 
@@ -110,11 +109,11 @@ export class Appointment {
     this._doctor = doctor;
   }
 
-  get procedure(): Procedure {
-    return this._procedure;
+  get treatments(): Treatment[] {
+    return this._treatments;
   }
-  private set procedure(procedure: Procedure) {
-    this._procedure = procedure;
+  private set treatments(treatments: Treatment[]) {
+    this._treatments = treatments;
   }
 
   get room(): ConsultingRoom {
@@ -168,7 +167,7 @@ export class Appointment {
     this._state = "Scheduled";
   }
 
-  addProcedure(treatments: Treatment[]): void {
-    this._procedure.addTreatments(treatments);
+  addTreatments(treatments: Treatment[]): void {
+    this._treatments.push(...treatments);
   }
 }
